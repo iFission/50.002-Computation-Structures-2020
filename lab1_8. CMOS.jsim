@@ -1,0 +1,16 @@
+.include "./nominal.jsim"
+.include "./lab1checkoff.jsim"
+
+.subckt F A B C Z
+MPDA 2 A 1 0 NENH sw=8 sl=1
+MPDB 1 B 0 0 NENH sw=8 sl=1
+MPDC 2 C 0 0 NENH sw=8 sl=1
+
+MPUA 2 A 3 vdd PENH sw=8 sl=1
+MPUB 2 B 3 vdd PENH sw=8 sl=1
+MPUC 3 C vdd vdd PENH sw=8 sl=1
+
+MINV1 Z 2 vdd vdd PENH sw=8 sl=1
+MINV2 Z 2 0 0 NENH sw=8 sl=1
+
+.ends

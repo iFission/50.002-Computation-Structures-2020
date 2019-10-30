@@ -1,0 +1,26 @@
+.include "./nominal.jsim"
+.include "./stdcell.jsim"
+.include "./lab3shifter.jsim"
+
+// bitshift
+.subckt shift32 ALUFN[1:0] A[31:0] B[4:0] shift[31:0] 
+Xslb4 B[4]#32 A[31:0] A[15:0] 0#16 Wl[31:0] mux2
+Xslb3 B[3]#32 Wl[31:0] Wl[23:0] 0#8 Xl[31:0] mux2
+Xslb2 B[2]#32 Xl[31:0] Xl[27:0] 0#4 Yl[31:0] mux2
+Xslb1 B[1]#32 Yl[31:0] Yl[29:0] 0#2 Zl[31:0] mux2
+Xslb0 B[0]#32 Zl[31:0] Zl[30:0] 0 SL[31:0] mux2
+
+Xsrb4 B[4]#32 A[31:0] 0#16 A[31:16] Wr[31:0] mux2
+Xsrb3 B[3]#32 Wr[31:0] 0#8 Wr[31:8] Xr[31:0] mux2
+Xsrb2 B[2]#32 Xr[31:0] 0#4 Xr[31:4] Yr[31:0] mux2
+Xsrb1 B[1]#32 Yr[31:0] 0#2 Yr[31:2] Zr[31:0] mux2
+Xsrb0 B[0]#32 Zr[31:0] 0 Zr[31:1] SR[31:0] mux2
+
+Xsrab4 B[4]#32 A[31:0] A[31]#16 A[31:16] W[31:0] mux2
+Xsrab3 B[3]#32 W[31:0] A[31]#8 W[31:8] X[31:0] mux2
+Xsrab2 B[2]#32 X[31:0] A[31]#4 X[31:4] Y[31:0] mux2
+Xsrab1 B[1]#32 Y[31:0] A[31]#2 Y[31:2] Z[31:0] mux2
+Xsrab0 B[0]#32 Z[31:0] A[31] Z[31:1] SRA[31:0] mux2
+
+Xmux4 ALUFN[0]#32 ALUFN[1]#32 SL[31:0] SR[31:0] 0#32 SRA[31:0] shift[31:0] mux4
+.ends 

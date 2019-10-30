@@ -1,0 +1,44 @@
+.include "./nominal.jsim"
+.include "./stdcell.jsim"
+.include "./lab3adder.jsim"
+
+.subckt FASUM A B CIN S
+XXOR1 A B 1 xor2
+XXOR2 1 CIN S xor2
+.ends
+
+.subckt FACARRYOUT A B CIN CARRY
+XAND1 A B 1 and2
+XAND2 B CIN 2 and2
+XAND3 A CIN 4 and2
+XOR1 1 2 3 or2
+XOR2 3 4 CARRY or2
+.ends
+
+.subckt FA A B CIN S CARRY
+XFASUM A B CIN S FASUM
+XFACARRYOUT A B CIN CARRY FACARRYOUT
+.ends
+
+.subckt adder32 ALUFN[0] A[31:0] B[31:0] s[31:0] z v n
+// adder
+XinvB B[31:0] ALUFN[0]#32 Bi[31:0] xor2
+Xadder1  A[0] Bi[0] ALUFN0 s[0] c[0] FA
+Xadder31 A[31:1] Bi[31:1] c[30:0] s[31:1] c[31:1] FA
+
+// z
+Xnorz s[7:0] s[15:8] s[23:16] s[31:24] output[7:0] nor4
+Xandz1 output[7:6] output[5:4] output[3:2] output[1:0] outputk[1:0] and4
+Xandz2 outputk[1] outputk[0] z and2
+
+// check v
+Xinv1 A[31] Ainv inverter
+Xinv2 Bi[31] Binv inverter
+Xinv3 s[31] sinv inverter
+Xandv1 A[31] Bi[31] sinv outputi and3
+Xandv2 Ainv Binv s[31] outputj and3
+Xorv outputi outputj v or2
+
+// check n
+.connect s[31] n
+.ends
