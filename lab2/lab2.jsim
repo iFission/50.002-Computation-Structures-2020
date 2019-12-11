@@ -1,0 +1,71 @@
+.include "../nominal.jsim"
+.include "../lab2checkoff.jsim"
+
+
+.subckt INV A Y
+MINV1 Y A vdd vdd PENH sw=8 sl=1
+MINV2 Y A 0 0 NENH sw=8 sl=1
+.ends
+
+.subckt NAND A B Y
+MNOR1 Y A vdd vdd PENH sw=8 sl=1
+MNOR2 Y B vdd vdd PENH sw=8 sl=1
+MNOR3 Y A 1 0 NENH sw=8 sl=1
+MNOR4 1 B 0 0 NENH sw=8 sl=1
+.ends
+
+.subckt NOR A B Y
+MNAND1 1 A vdd vdd PENH sw=8 sl=1
+MNAND2 Y B 1 vdd PENH sw=8 sl=1
+MNAND3 Y A 0 0 NENH sw=8 sl=1
+MNAND4 Y B 0 0 NENH sw=8 sl=1
+.ends
+
+.subckt AND A B Y
+XAND1 A B 1 NAND
+XAND2 1 Y INV
+.ends
+
+.subckt OR A B Y
+XOR1 A B 1 NOR
+XOR2 1 Y INV
+.ends
+
+.subckt XOR A B Y
+XNOR A B 6 NOR
+MNAND1 3 A vdd vdd PENH sw=4 sl=1
+MNAND2 3 B vdd vdd PENH sw=4 sl=1
+MNAND3 Y 6 3 vdd PENH sw=4 sl=1
+MNAND4 Y A 5 0 NENH sw=2 sl=1
+MNAND5 5 B 0 0 NENH sw=2 sl=1
+MNAND6 Y 6 0 0 NENH sw=2 sl=1
+.ends
+
+.subckt FASUM A B CIN S
+XXOR1 A B 1 XOR
+XXOR2 1 CIN S XOR
+.ends
+
+.subckt FACARRYOUT A B CIN CARRY
+XAND1 A B 1 AND
+XAND2 B CIN 2 AND
+XAND3 A CIN 4 AND
+XOR1 1 2 3 OR
+XOR2 3 4 CARRY OR
+.ends
+
+.subckt FA A B CIN S CARRY
+XFASUM A B CIN S FASUM
+XFACARRYOUT A B CIN CARRY FACARRYOUT
+.ends
+
+.subckt ADDER4 a3 a2 a1 a0 b3 b2 b1 b0 s4 s3 s2 s1 s0
+* remember the node named "0" is the ground node
+* nodes c0 through c3 are internal to the ADDER module
+Xbit0 a0 b0 0 s0 c0 FA
+Xbit1 a1 b1 c0 s1 c1 FA
+Xbit2 a2 b2 c1 s2 c2 FA
+Xbit3 a3 b3 c2 s3 s4 FA
+.ends
+
+.plot Xtest.c0

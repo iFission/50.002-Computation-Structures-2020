@@ -1,5 +1,5 @@
-.include "./nominal.jsim"
-.include "./lab1checkoff.jsim"
+.include "../nominal.jsim"
+.include "../lab1checkoff.jsim"
 
 .subckt F A B C Z
 MPDA 2 A 1 0 NENH sw=8 sl=1

@@ -1,5 +1,5 @@
 * plot Ids vs. Vds for 5 different Vgs values
-.include "./nominal.jsim"
+.include "../nominal.jsim"
 Vmeter vds drain 0v
 Vds vds 0 0v
 Vgs gate 0 0v

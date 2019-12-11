@@ -1,6 +1,6 @@
-.include "./nominal.jsim"
-.include "./stdcell.jsim"
-.include "./lab3compare.jsim"
+.include "../nominal.jsim"
+.include "../stdcell.jsim"
+.include "../lab3compare.jsim"
 
 // compare
 .subckt compare32 ALUFN[2:1] z v n cmp[31:0] 

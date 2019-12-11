@@ -1,0 +1,31 @@
+.include "../nominal.jsim"
+.include "../stdcell.jsim"
+.include "../lab6regfile.jsim"
+
+.subckt and5 a b c d e z
+Xa1 a b c d z1 and4
+Xa2 z1 e z and2
+.ends
+
+.subckt regfile clk werf ra2sel ra[4:0] rb[4:0] rc[4:0] wdata[31:0] radata[31:0] rbdata[31:0]
+
+Xregfile
++ vdd 0 0 ra[4:0] adata[31:0] // A read port
++ vdd 0 0 ra2mux[4:0] bdata[31:0] // B read port
++ 0 clk werf rc[4:0] wdata[31:0] // write port
++ $memory width=32 nlocations=31
+
+xselect ra2sel#5 rb[4:0] rc[4:0] ra2mux[4:0] mux2
+
+// check R31, if 11111, return 0#32
+// check readport A
+Xra ra[4:0] ra_in and5
+
+// check readport B
+Xrb ra2mux[4:0] rb_in and5
+
+// use a 2-mux to select output
+Xaout ra_in#32 adata[31:0] 0#32 radata[31:0] mux2
+Xbout rb_in#32 bdata[31:0] 0#32 rbdata[31:0] mux2
+
+.ends

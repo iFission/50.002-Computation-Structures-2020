@@ -1,6 +1,6 @@
-.include "./nominal.jsim"
-.include "./stdcell.jsim"
-.include "./lab3shifter.jsim"
+.include "../nominal.jsim"
+.include "../stdcell.jsim"
+.include "../lab3shifter.jsim"
 
 // bitshift
 .subckt shift32 ALUFN[1:0] A[31:0] B[4:0] shift[31:0] 

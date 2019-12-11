@@ -1,5 +1,5 @@
 .include "./nominal.jsim"
-.include "./lab2checkoff.jsim"
+.include "./8clocks.jsim"
 
 
 .subckt INV A Y
@@ -59,13 +59,40 @@ XFASUM A B CIN S FASUM
 XFACARRYOUT A B CIN CARRY FACARRYOUT
 .ends
 
-.subckt ADDER4 a3 a2 a1 a0 b3 b2 b1 b0 s4 s3 s2 s1 s0
-* remember the node named "0" is the ground node
-* nodes c0 through c3 are internal to the ADDER module
-Xbit0 a0 b0 0 s0 c0 FA
-Xbit1 a1 b1 c0 s1 c1 FA
-Xbit2 a2 b2 c1 s2 c2 FA
-Xbit3 a3 b3 c2 s3 s4 FA
-.ends
+XNAND clk2 clk1 y NAND
+.tran 20ns
+.plot clk2
+.plot clk1
+.plot y
 
-.plot Xtest.c0
+XAND clk2 clk1 y AND
+.tran 20ns
+.plot clk2
+.plot clk1
+.plot y
+
+XNOR clk2 clk1 y NOR
+.tran 20ns
+.plot clk2
+.plot clk1
+.plot y
+
+XOR clk2 clk1 y OR
+.tran 20ns
+.plot clk2
+.plot clk1
+.plot y
+
+XXOR clk2 clk1 y XOR
+.tran 20ns
+.plot clk2
+.plot clk1
+.plot y
+
+XFA clk2 clk1 clk3 s c FA
+.tran 40ns
+.plot clk2
+.plot clk1
+.plot clk3
+.plot s
+.plot c

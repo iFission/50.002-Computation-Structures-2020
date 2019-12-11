@@ -1,5 +1,5 @@
 * circuit for Lab#1, parts C thru F 
-.include "./nominal.jsim"
+.include "../nominal.jsim"
 * 2-input NAND: inputs are A and B, output is Z
 .subckt nand2 a b z
 MPD1 z a 1 0 NENH sw=8 sl=1
@@ -25,7 +25,6 @@ Vil vil 0 0.6v
 Vih vih 0 2.6v
 Voh voh 0 3.0v
 
-.temp 100
 .tran 15ns
 .plot vin
 .plot nin nout vol vil vih voh

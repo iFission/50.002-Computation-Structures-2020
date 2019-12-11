@@ -1,6 +1,6 @@
-.include "./nominal.jsim"
-.include "./stdcell.jsim"
-.include "./lab3adder.jsim"
+.include "../nominal.jsim"
+.include "../stdcell.jsim"
+.include "../lab3adder.jsim"
 
 .subckt FASUM A B CIN S
 XXOR1 A B 1 xor2

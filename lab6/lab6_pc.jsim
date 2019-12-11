@@ -1,0 +1,35 @@
+.include "../nominal.jsim"
+.include "../stdcell.jsim"
+.include "../lab6pc.jsim"
+
+.subckt FASUM A B CIN S
+XXOR1 A B 1 xor2
+XXOR2 1 CIN S xor2
+.ends
+
+.subckt FACARRYOUT A B CIN CARRY
+XAND1 A B 1 and2
+XAND2 B CIN 2 and2
+XAND3 A CIN 4 and2
+XOR1 1 2 3 or2
+XOR2 3 4 CARRY or2
+.ends
+
+.subckt FA A B CIN S CARRY
+XFASUM A B CIN S FASUM
+XFACARRYOUT A B CIN CARRY FACARRYOUT
+.ends
+
+.subckt adder32 ALUFN[0] A[31:0] B[31:0] s[31:0]
+// adder
+XinvB B[31:0] ALUFN[0]#32 Bi[31:0] xor2
+Xadder1  A[0] Bi[0] ALUFN0 s[0] c[0] FA
+Xadder31 A[31:1] Bi[31:1] c[30:0] s[31:1] c[31:1] FA
+.ends
+
+.subckt pc clk reset ia[31:0]
+Xreset reset#32  pc_increment[31:0] 0#32 mux2output[31:0] mux2
+Xpc32 mux2output[31:2] clk#30 ia[31:2] dreg // only store first 30 bits, last 2 bits 0
+Xadder32 0 ia[31:0] 0#29 vdd 0#2 pc_increment[31:0] adder32 // 4 = 0#29, 1, 0#2
+.connect ia[1:0] 0
+.ends
