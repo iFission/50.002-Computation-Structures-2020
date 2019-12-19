@@ -24,7 +24,7 @@
 ||| ELLOHAY
 ||| 
 
-.include ../beta.uasm		| Define Beta instructions, etc.
+.include beta.uasm		| Define Beta instructions, etc.
 .options clock tty
 
 ||| The following code is a primitive but complete timesharing kernel
@@ -599,6 +599,7 @@ Prompt:	semaphore(1)		| To keep us from typing next prompt
 P0Start:WrMsg()
 	.text "Start typing, Bunky.\n\n"
 
+| prints the prompt
 P0Read:	Wait(Prompt)		| Wait until P1 has caught up...
 	WrMsg()			| First a newline character, then
 	.text "\n"
@@ -606,8 +607,24 @@ P0Read:	Wait(Prompt)		| Wait until P1 has caught up...
 	HexPrt()		|  as part of the count, then
 	 WrMsg()		|  the remainder.
 	.text "> "
-
 	LD(P0LinP, r3)		| ...then read a line into buffer...
+
+| if mouse click, no keyboard, continue to P3, print mouse click
+| if keyboard, continue
+| else, repeat
+| load mouse state to check
+
+P0Check_Keyboard:
+	LD(Key_State, r1) | 
+	BT(r1, P0RdCh) | if keyboard, get key
+
+P0Check_Mouse:
+	LD(Click_State, r1) | load click to r1
+	CMPEQC(r1, -1, r1) | check if empty
+	BT(r1, P0Check_Keyboard) | if no click, back to start
+	Signal(Prompt_Mouse)
+	BR(P0Read)
+
 	
 P0RdCh:	
 	GetKey()		| read next character,
@@ -788,7 +805,7 @@ Count3: LONG(0)
 ||| User-mode code: Process 3 mouse display
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
-Prompt_Mouse:	semaphore(1)
+Prompt_Mouse:	semaphore(0) | initially 0, P3 need to wait for mouse click, to wait for prompt to be printed first
 
 P3Start:WrMsg()
 	.text "\n" | next line
@@ -811,7 +828,7 @@ P3Read:
 	HexPrt() | print y-coords
 	WrMsg()
 	.text "\n"
-	Signal(Prompt_Mouse)
+	Signal(Prompt) | after printing click, print prompt
 	BR(P3Read)
 
 P3Stack:
